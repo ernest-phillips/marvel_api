@@ -1,57 +1,52 @@
-const URL = `https://gateway.marvel.com:443/v1/public/characters?apikey=dae95cc0861de65bc53fe1c135bc361b&limit=5
+const URL = `https://gateway.marvel.com:443/v1/public/characters?orderBy=name&limit=12&apikey=dae95cc0861de65bc53fe1c135bc361b&offset=0
 `
+const URL1 = `https://gateway.marvel.com:443/v1/public/characters?orderBy=name&limit=20&apikey=dae95cc0861de65bc53fe1c135bc361b&offset=13
+`
+fetch(URL)
+.then(function(res)
+{
+  res.json().then(dataAsJson =>
+  {
+    const query =  dataAsJson.data;
 
-fetch(URL) .then(function (res) { res.json().then(dataAsJson => { console.log(dataAsJson.data[]); }); });
-
-function handleAPILoaded() {
-    $('#search-button').attr('disabled', false);
-  }
-
-  // Search for a specified string.
-  function getDataFromApi(searchTerm, callback) {
-
-    let query =
-      {
-        q: `${searchTerm}`,
-        part: 'snippet',
-        type: 'video',
-        maxResults: 5,
-        key : KEY,
-        order: 'viewCount'
-    };
-
-  $.getJSON(YOUTUBE_SEARCH_URL, query, callback);
-  }
-
-function renderResult(result) {
-
-  return `
-  <section role="region">
-
-  <a href="https://www.youtube.com/watch?v=${result.id.videoId}" alt="${result.snippet.title} Youtube video thumbnail."><img src ="${result.snippet.thumbnails.medium.url}"target="_blank"/></a>
-  <h5>${result.snippet.title}</h5>
-  <br>
-  </section>`
-
-}
-
-function displayYouTubeSearchData(data) {
-
-    const results = data.items.map((item, index) => renderResult(item));
-    $('.js-search-results').html(results);
-
-}
-
-function watchSubmit() {
-  $('.js-search-form').submit(event => {
-    event.preventDefault();
-    const queryTarget = $(event.currentTarget).find('.js-query');
-    const query = queryTarget.val();
-    // clear out the input
-    queryTarget.val("");
-    getDataFromApi(query, displayYouTubeSearchData);
+    readQuery(query);
   });
+ 
+});
+
+function readQuery(query){
+    const list = query.results.map((item, index) => showHeroes(item));
+  }
+
+function showHeroes(item){
+    console.log(item.urls[0].url)
+     $('.query-results').append(`
+     <div class="hero-viewed col-4">
+  <img src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait">
+  <a href="${item.urls[0].url}" ><h4 class="hero-name">${item.name}</h4></a>
+</div>`
+
+)
+hideNotFound()
+}
+  function hideNotFound(){
+    $("img:contains('image_not_available')").hide();
+  }
+
+function nextPage(){
+  $('#btn_next').on('click', function(){
+    fetch(URL1)
+.then(function(res)
+{
+  res.json().then(dataAsJson =>
+  {
+    const query =  dataAsJson.data;
+
+    readQuery(query);
+  });
+
+});
+  })
 }
 
-
-$(watchSubmit);
+nextPage()
