@@ -52,7 +52,7 @@ function showHeroes(item) {
 
      <div class="col-4">
      <div class="container">
-<img src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait">
+<img src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait" tabindex="0">
   <h4 class="hero-name">${item.name}</h4></a>
   </div>
 </div>`)
@@ -70,50 +70,34 @@ function letterClicked(){
        });
 }
 
+function footerInfo(){
+  $('footer').html(
+    ``
+  )
+}
 
-
-// function showComics(item,getLetterResults){
-//   //  console.log(`<article>${item.title} ${item.description}</article>`)
-//    $('.js-moreData').on('click',function (){
-
-//       $('.query-results').html(
-//       `<article>${item.title}<br>
-//       ${item.description}</article><br>
-//       `)
-//   });
-//   $('.js-backBtn').on('click',()=>
-//     getLetterResults = $(this).text()
-
-//   )
-// }
-
-// function showInfo(){
-//   $('img').on('click',function(event){
-//    $('.query-results').html(`
-   
-//    `)
-
-//   })
-// }
-
-// <button class="js-popup">
 
 function nextPage(data){
   let results = data.data.results;
-  // console.log(results)
-  if(results.length > 9){
-    $('.toShow').toggle(function () {
+  let totalChars = data.data.total;
+  console.log(totalChars)
+  let counter = 2;
+  let totalPages = totalChars/9;
+
+  console.log("The max amount of pages: ",totalPages)
+
+
+     $('.toShow').toggle(function () {
      $(".toShow").addClass("active");
     })
-  }
 
-  $('.js-page-num').on('click', function(event){
-     event.preventDefault();
 
-     offset = ($(this).text() - 1) * 10  ;
-
+  $('#js-page-next').on('click', function(event){
+    //  event.preventDefault();
+     counter++
+     offset = (counter - 1) * 10  ;
      getDataFromApi();
-     console.log(offset)
+     console.log("The offset is now: " ,offset)
   })
 }
 
