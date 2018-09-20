@@ -16,56 +16,35 @@ function getDataFromApi() {
     nameStartsWith: `${getLetterResults}`
   }
 
-  // const query2= {
-  //   limit:6,
-  //   apikey: KEY,
-  //   orderBy: '-onsaleDate'
-  // }
 $.getJSON(URL, query, characterQuery)
-// $.getJSON(COMIC_URL, query2, comicsQuery)
-$.getJSON(URL, query, nextPage)
 }
 
 
 function characterQuery(data) {
-
   let response = data.data ;
-
   //clear old data and then do this
   $('.js-query-results').html('');
    response.results.map((item, index) => showHeroes(item));
-
 }
-
-// function comicsQuery(data){
-//   let response = data.data
-//   // event.preventDefault();
-//   //   $('.query-results').html('')
-//   response.results.map((item, index) => showComics(item));
-
-// }
 
 
 function showHeroes(item) {
-
+//Add character blocks to the DOM
   $('.js-query-results').append(`
-
      <div class="col-4">
      <div class="container">
 <img src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait" tabindex="0">
   <h4 class="hero-name">${item.name}</h4></a>
   </div>
 </div>`)
-$('.js-btm-nav').append(``)
 
 }
 
 function letterClicked(){
-
   $('.js-letterClicked').on('click', function(event){
      event.preventDefault();
      getLetterResults =  $(this).text().toLowerCase();
-
+//call the API again with new query value
      getDataFromApi();
        });
 }
@@ -77,37 +56,9 @@ function footerInfo(){
 }
 
 
-function nextPage(data){
-  let results = data.data.results;
-  let totalChars = data.data.total;
-  console.log(totalChars)
-  let counter = 2;
-  let totalPages = totalChars/9;
-
-  console.log("The max amount of pages: ",totalPages)
-
-
-     $('.toShow').toggle(function () {
-     $(".toShow").addClass("active");
-    })
-
-
-  $('#js-page-next').on('click', function(event){
-    //  event.preventDefault();
-     counter++
-     offset = (counter - 1) * 10  ;
-     getDataFromApi();
-     console.log("The offset is now: " ,offset)
-  })
-}
-
-
-
 function onPageLoad(){
   getDataFromApi();
-
   letterClicked();
-
 }
 
 $(onPageLoad);
