@@ -3,16 +3,17 @@ body {
   width: 100%;
   background-color: #000;
   margin: 0;
+  font-family: 'Lato', sans-serif;
 }
 
 [src*=".jpg"] {
   width: 100%;
 }
 
-img{
+/* img{
   width: 100%;
   height: auto;
-}
+} */
 *{
   box-sizing: border-box;
 }
@@ -21,26 +22,56 @@ html,body{
   }
 
 main{
-  width: 1040px;
+  max-width: 960px;
   margin: 0 auto;
+  padding-left: 10px;
+  padding-right: 10px;
   background-color: #fff;
   height: 100%;
   overflow:auto;
 
 }
+top-nav{
+  width: 100%;
+  padding: 0px 10px 0px 10px;
+
+}
+ul{
+ padding: 0px 5px 0px 5px;
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+}
+li{
+  font-family: 'Archivo Black', sans-serif;
+
+
+}
+.container{
+  width: 100%;
+}
 .heading{
- padding-left: 30px;
+ width: 100%;
  text-align: center;
  margin-top: 30px;
 }
-
-/* .grid-container{
-  display: grid;
-  grid-template-columns: auto auto auto;
-  padding: 20px;
-} */
+button{
+  width: 100%;
+  border: none;
+  padding: 0;
+}
+.query-results{
+  padding: 10px;
+}
 .hero-viewed{
-  text-align: center;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero-bio{
+  background-color: 00CFFF;
+  color: #fff;
 
 }
 .hero-name{
@@ -50,7 +81,9 @@ main{
   padding: 10px 0 10px 0;
   border-radius: 0px 0px 10px 0px;
 }
-
+.toShow{
+  visibility: hidden;
+}
 [class*='col-'] {
   float: left;
   padding-left: 1.04%;
@@ -63,7 +96,10 @@ main{
   padding-right: 20px;
   margin: 0 auto;
   font-size: 15px;
+  text-align: center;
+
 }
+
 nav{
   color:#000;
   width: 100%;
@@ -79,31 +115,43 @@ nav li{
 }
 a:link {
     text-decoration: none;
+    color: black;
 }
 
 a:visited {
     text-decoration: none;
+    color: black
 }
 
 a:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    color:#6495ED;
 }
 
 a:active {
     text-decoration: underline;
 }
-@media only screen and (min-width: 640px) {
-  .col-3 {
-    width: 25%;
-  }
+.col-4{
+  float: left;
+  padding-left: 1.04166666%;
+  padding-right: 1.04166666%;
+  text-align: center;
+  width: 100%;
+}
+@media only screen and (min-width: 774px) {
+
   .col-4 {
     width: 33.33%;
   }
+}
 
-  .col-6 {
-    width: 50%;
+@media only screen and (max-width: 620px) {
+  font-size: 20px;
+  main{
+    max-width: 620px;
   }
 }
+
 
 /* Clearfix */
 
