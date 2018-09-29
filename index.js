@@ -5,7 +5,6 @@ const COMIC_URL = `https://gateway.marvel.com:443/v1/public/comics?`
 let offset = 0;
 let getLetterResults;
 let charName;
-console.log(charName)
 let counter = 0;
 
 
@@ -14,7 +13,7 @@ function getDataFromApi() {
   const query = {
     limit: 100,
     apikey: KEY,
-    orderBy: '-name',
+    orderBy: 'name',
     offset: `${offset}`
     }
 $.getJSON(URL, query, characterIndex)
@@ -28,27 +27,10 @@ function getComicData(){
     name: `${charName}`
       }
 $.getJSON(URL, query, comicsIndex)
+
 }
 
-function getBookImgData(){
-  let bookURL = `https://gateway.marvel.com:443/v1/public/comics?characters=`
-
-  let query = {
-    limit: 3,
-    apikey: KEY
-  }
-
-  $.getJSON(bookURL,query,callback)
-}
-
-
-// function (data){
-//   characterIndex(data)
-//   pageNav(data)
-//   // pagination()
-//   getFooter(data)
-// }
-
+//Map index for the characacter results information
 function characterIndex(data) {
   let response = data.data ;
   //clear old data and then do this
@@ -57,19 +39,18 @@ function characterIndex(data) {
    registerClickedName()
 }
 
+//Map index for the characacter comics results information
 function comicsIndex(data){
   let response = data.data
-  // event.preventDefault();
-  //   $('.query-results').html('')
+  // console.log(response)
   response.results.map((item, index) => showBio(item));
-  registerClickedName()
+
 }
 
 
 function showHero(item) {
-  let firstLetter = item.name[0]
+//  remove thumbnails with no image
 
-//  console.log(item.thumbnail.path.includes("image_not_available"))
  if(item.thumbnail.path.includes("image_not_available")){
    $(this).hide();
  }else{
@@ -83,53 +64,104 @@ function showHero(item) {
  }
 }
 
+function createSections(){
+    const getAlphabet =
+    ["A","B","C","D","E","F"
+    ,"G","H","I","K","L","M",
+    "N","O","P","Q","R","S",
+    "T","V","X","Y","Z"]
 
-function registerClickedName(){
- $('.hero-name').on('click',function(){
+    let heroGroup = getAlphabet.map((item,index) => (
+      `<h2 class="sectionID">${item}</h2>
+      <div id="${item}">
+      </div>`
+))
 
-   charName = $(this).text()
-   getComicData();
-    if ($('#lightbox').length > 0) {
-      $('lightbox').show()
-      } else{
-        $('body').append(showBio())
-      }
- })
+$('#letter-group').html(heroGroup.join(" \n"))
+console.log(heroGroup.join(" \n"));
 }
 
+createSections()
+//Store the clicked character name in charName variable
+function registerClickedName(){
+ $('.hero-name').on('click',function()
+ {
+   charName = $(this).text();
+   getComicData();
+   isLightBoxPresent();
+  }
+ )
+}
+
+//check to see if lightbox is present
+function isLightBoxPresent(){
+  if ($('#lightbox').length > 0) {
+      $('lightbox').show()
+      } else{
+        $('body').append()
+      }
+ }
+
 function showBio(item){
-   $('.js-char-data').html(
-     `<article id="lightbox">
+
+let description = item.description
+let issues = item.comics.items.map((item,index) => (item))
+console.log(issues.item)
+   $('#lightbox').html(
+     `<div id="lb-container">
   <h1>${item.name}</h1>
-  <img src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait">
-
+  <img class="img-thumb" src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait">
   <p>${item.description}</p>
-</article>
-
-<section class="appearances">
+  <section class="appearances">
+  <h3>Character Appearances</h3>
     <ul>
-      <li>${item.comics.items[0].name}</li>
-      <li>${item.comics.items[1].name}</li>
-      <li>${item.comics.items[2].name}</li>
     </ul>
-  </section>`
-   )
+  </section>
+  </div>`
+   ).show()
    console.log(item.comics.items)
-    goBack();
+
 }
 
 function goBack(){
+  //Click anywhere on the page to get rid of lightbox window
+	$('#lightbox').on('click', function() {
+		$('#lightbox').hide();
+	});
+}
+
+
+
+function getFooter(data){
+  let copy = data.copyright;
+  let attrTxt = data.attributionText
+  let attrHTML = data.attributionHTML
+  $('.js-footer').html(`${attrHTML}`)
+}
+
+function onPageLoad(){
+   getDataFromApi();
+   goBack();
+  }
+
+$(onPageLoad);
+
+
+
+// function (data){
+//   characterIndex(data)
+//   pageNav(data)
+//   // pagination()
+//   getFooter(data)
+// }
+
+// function goBack(){
   //  $('.js-back').on('click', function(){
   //    $('.js-more-info').remove();
   //    getDataFromApi()
-  //    console.log("did something")
 
-  //Click anywhere on the page to get rid of lightbox window
-	$('#lightbox').on('click', function() { //must use live, as the lightbox element is inserted into the DOM
-		$('#lightbox').hide();
-	});
 
-}
+
 // function letterSection(){
 //   $('a').attr('name', function(event){
 //     getLetterResults = $(this).text().toLowerCase();
@@ -148,62 +180,53 @@ function goBack(){
 // `)
 // }
 
-function nextPage(){
-   $('.js-btm-nav').on('click', ".js-page-next", function(event){
-    //  event.preventDefault();
-     counter+=1;
-     offset = (counter) * 10  ;
-     getDataFromApi();
-    //  console.log("The offset is now: " ,offset)
-  })
-}
+// function prevPage(){
+//     $('.js-btm-nav').on('click', '#js-page-prev', function(event){
+//     //  event.preventDefault();
 
-function pageNav(data){
-  let results = data.data.results;
-  let totalChars = data.data.total;
-  // console.log(totalChars)
-  //determin amount of pages from results
-  let totalPages = totalChars/9;
-  let pagesRemain = totalPages - counter;
-  // console.log(pagesRemain)
-  if (pagesRemain > 0){
-     $('.toShow').toggle(function () {
-     $(".toShow").addClass("active");
-       })
-  }  else {
-     $('.toShow').toggle(function () {
-     $(".toShow").addClass("inactive");
-       })
-  }
+//      counter-=1;
+//      offset = (counter) * 10  ;
+//      getDataFromApi();
 
-}
+//   })
+// }
 
+// function nextPage(){
+//    $('.js-btm-nav').on('click', ".js-page-next", function(event){
+//     //  event.preventDefault();
+//      counter+=1;
+//      offset = (counter) * 10  ;
+//      getDataFromApi();
 
+//   })
+// }
 
-function prevPage(){
-    $('.js-btm-nav').on('click', '#js-page-prev', function(event){
-    //  event.preventDefault();
+// function pageNav(data){
+//   let results = data.data.results;
+//   let totalChars = data.data.total;
 
-     counter-=1;
-     offset = (counter) * 10  ;
-     getDataFromApi();
-     console.log("The offset is now: " ,offset)
-  })
-}
+//   //determin amount of pages from results
+//   let totalPages = totalChars/9;
+//   let pagesRemain = totalPages - counter;
 
-function getFooter(data){
-  let copy = data.copyright;
-  let attrTxt = data.attributionText
-  let attrHTML = data.attributionHTML
-  $('.js-footer').html(`${attrHTML}`)
-}
+//   if (pagesRemain > 0){
+//      $('.toShow').toggle(function () {
+//      $(".toShow").addClass("active");
+//        })
+//   }  else {
+//      $('.toShow').toggle(function () {
+//      $(".toShow").addClass("inactive");
+//        })
+//   }
 
-function onPageLoad(){
-   getDataFromApi();
-  //  getAlphabet();
-  //  letterSection();
-   nextPage();
-   prevPage();
-  }
+// }
 
-$(onPageLoad);
+// function getBookImgData(){
+//   let bookURL = `https://gateway.marvel.com:443/v1/public/comics?characters=`
+
+//   let query = {
+//     limit: 3,
+//     apikey: KEY
+//   }
+//   $.getJSON(bookURL,query,callback)
+// }
