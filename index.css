@@ -1,12 +1,18 @@
-
+html{
+}
 body {
   width: 100%;
   background-color: #000;
   margin: 0;
   font-family: 'Lato', sans-serif;
+    min-height: 960px;
+
 }
 
 [src*=".jpg"] {
+  width: 100%;
+}
+[src*=".gif"] {
   width: 100%;
 }
 
@@ -17,7 +23,9 @@ body {
 html,body{
   height: 100%;
   }
-
+#lightbox{
+  display: none;
+}
 main{
   max-width: 960px;
   margin: 0 auto;
@@ -41,12 +49,12 @@ ul{
 }
 li{
   font-family: 'Archivo Black', sans-serif;
-
-
 }
+
 .container{
   width: 100%;
   margin-top: 20px;
+
 }
 .heading{
  width: 100%;
@@ -60,6 +68,17 @@ button{
 }
 .query-results{
   padding: 10px;
+}
+
+#letter-group{
+  margin: 0 auto;
+  padding-bottom: 50px;
+  width: 100%;
+  padding-top: 30px;
+}
+.sectionID{
+  padding-left: 25px;
+  display: none;
 }
 .hero-viewed{
   max-width: 100%;
@@ -77,17 +96,15 @@ button{
   color: #fff;
   padding: 10px 0 10px 0;
   border-radius: 0px 0px 10px 0px;
-  min-height: 100px;
+  min-height: 75px;
   /* line-height: 50px; */
 }
+
 .hidden{
   visibility: hidden;
 }
-.active{
-  visibility: visible;
-}
-.inactive{
-  visibility: hidden;
+.img-thumb{
+  width: 200px;
 }
 [class*='col-'] {
   float: left;
@@ -99,10 +116,9 @@ button{
   max-width: 1000px;
   padding-left: 20px;
   padding-right: 20px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   font-size: 15px;
   text-align: center;
-
 }
 
 nav{
@@ -112,17 +128,39 @@ nav{
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-
 }
+
 nav li{
   display: inline-block;
   padding: 0 10px 0 10px;
+}
+container{
+  max-width: 960px;
+  height: 100%;
+}
+
+footer{
+   height:auto;
+   width:100%;
+   color: #fff;
+   background:#be1818;
+   text-align: center;
+   margin: 0 auto;
+   padding: 30px 10px 0px 10px;
+   font-size: 20px;
 }
 a:link {
     text-decoration: none;
     color: black;
 }
-
+footer a:link {
+    text-decoration: none;
+    color: #fff;
+}
+footer a:hover {
+    text-decoration: none;
+    color: rgb(223, 226, 33);
+}
 a:visited {
     text-decoration: none;
     color: black;
@@ -141,12 +179,18 @@ a:active {
   padding-left: 1.04166666%;
   padding-right: 1.04166666%;
   text-align: center;
-  width: 100%;
+  max-width: 100%;
 }
 @media only screen and (min-width: 774px) {
 
   .col-4 {
     width: 33.33%;
+  }
+
+  .col-5{
+    width: 20%;
+    font-size: 16px;
+    text-align: center;
   }
 }
 

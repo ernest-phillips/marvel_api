@@ -4,17 +4,21 @@ const KEY = "dae95cc0861de65bc53fe1c135bc361b"
 const COMIC_URL = `https://gateway.marvel.com:443/v1/public/comics?`
 let offset = 0;
 let getLetterResults;
+
 let charName;
 let counter = 0;
 
 
 
 function getDataFromApi() {
+
+
   const query = {
-    limit: 100,
+    limit: 50,
     apikey: KEY,
     orderBy: 'name',
-    offset: `${offset}`
+    offset: `${offset}`,
+    nameStartsWith: `${getLetterResults}`
     }
 $.getJSON(URL, query, characterIndex)
 }
@@ -30,11 +34,23 @@ $.getJSON(URL, query, comicsIndex)
 
 }
 
+function sendLetterToAPI(){
+    const getAlphabet =
+    ["A","B","C","D","E","F"
+    ,"G","H","I","K","L","M",
+    "N","O","P","Q","R","S",
+    "T","V","X","Y","Z"]
+
+
+
+}
+
 //Map index for the characacter results information
+
 function characterIndex(data) {
   let response = data.data ;
   //clear old data and then do this
-  $('.js-query-results').html('');
+  $('#letter-result').html('');
    response.results.map((item, index) => showHero(item));
    registerClickedName()
 }
@@ -49,12 +65,14 @@ function comicsIndex(data){
 
 
 function showHero(item) {
-//  remove thumbnails with no image
+ let firstLetter = item.name[0]
 
- if(item.thumbnail.path.includes("image_not_available")){
-   $(this).hide();
- }else{
-  $(`.js-char-data`).append(`
+    //  remove thumbnails with no image
+    // if(item.thumbnail.path.includes("image_not_available")){
+    //   $(this).hide();
+    // }else{
+
+  $(`#letter-result`).append(`
       <div class="col-5">
   <img src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait" tabindex="0">
     <p class="hero-name">${item.name}</p>
@@ -62,31 +80,23 @@ function showHero(item) {
   </div>
   `)
  }
+
+
+function letterSection(){
+
+  $('.navLetter').on('click', function(){
+    getLetterResults = $(this).text();
+    getDataFromApi();
+       });
 }
 
-function createSections(){
-    const getAlphabet =
-    ["A","B","C","D","E","F"
-    ,"G","H","I","K","L","M",
-    "N","O","P","Q","R","S",
-    "T","V","X","Y","Z"]
 
-    let heroGroup = getAlphabet.map((item,index) => (
-      `<h2 class="sectionID">${item}</h2>
-      <div id="${item}">
-      </div>`
-))
-
-$('#letter-group').html(heroGroup.join(" \n"))
-console.log(heroGroup.join(" \n"));
-}
-
-createSections()
 //Store the clicked character name in charName variable
 function registerClickedName(){
  $('.hero-name').on('click',function()
  {
    charName = $(this).text();
+   console.log(charName)
    getComicData();
    isLightBoxPresent();
   }
@@ -102,6 +112,7 @@ function isLightBoxPresent(){
       }
  }
 
+//When character name clicked, a lightbox with more info shows
 function showBio(item){
 
 let description = item.description
@@ -111,7 +122,7 @@ console.log(issues.item)
      `<div id="lb-container">
   <h1>${item.name}</h1>
   <img class="img-thumb" src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait">
-  <p>${item.description}</p>
+  <p class"describe">${item.description}</p>
   <section class="appearances">
   <h3>Character Appearances</h3>
     <ul>
@@ -119,10 +130,11 @@ console.log(issues.item)
   </section>
   </div>`
    ).show()
-   console.log(item.comics.items)
+  //  console.log(item.comics.items)
 
 }
 
+//close lightbox
 function goBack(){
   //Click anywhere on the page to get rid of lightbox window
 	$('#lightbox').on('click', function() {
@@ -131,7 +143,7 @@ function goBack(){
 }
 
 
-
+//add footer to DOM
 function getFooter(data){
   let copy = data.copyright;
   let attrTxt = data.attributionText
@@ -139,15 +151,22 @@ function getFooter(data){
   $('.js-footer').html(`${attrHTML}`)
 }
 
+function randomChar(){
+
+}
+
 function onPageLoad(){
-   getDataFromApi();
-   goBack();
+  // sendLetterToAPI()
+  getDataFromApi();
+  letterSection()
+  // createSections()
+  goBack();
   }
 
 $(onPageLoad);
 
 
-
+/////////////////////Deprecated CODE////////////////////////////////////
 // function (data){
 //   characterIndex(data)
 //   pageNav(data)
@@ -159,17 +178,6 @@ $(onPageLoad);
   //  $('.js-back').on('click', function(){
   //    $('.js-more-info').remove();
   //    getDataFromApi()
-
-
-
-// function letterSection(){
-//   $('a').attr('name', function(event){
-//     getLetterResults = $(this).text().toLowerCase();
-//     getDataFromApi();
-//        });
-// }
-
-
 
 // function pagination(){
 //   $('.js-btm-nav').html(`
@@ -229,4 +237,13 @@ $(onPageLoad);
 //     apikey: KEY
 //   }
 //   $.getJSON(bookURL,query,callback)
+// }
+
+
+
+
+
+//     $('#letter-group').html(heroGroup.join(" \n"))
+//     // console.log(heroGroup.join(" \n"));
+//     letterSection();
 // }
