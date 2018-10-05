@@ -2,6 +2,8 @@ const URL = `https://gateway.marvel.com:443/v1/public/characters?`
 const KEY = "dae95cc0861de65bc53fe1c135bc361b"
 
 const COMIC_URL = `https://gateway.marvel.com:443/v1/public/comics?`
+
+
 let offset = 0;
 let getLetterResults;
 
@@ -11,8 +13,6 @@ let counter = 0;
 
 
 function getDataFromApi() {
-
-
   const query = {
     limit: 50,
     apikey: KEY,
@@ -21,6 +21,7 @@ function getDataFromApi() {
     nameStartsWith: `${getLetterResults}`
     }
 $.getJSON(URL, query, characterIndex)
+$.getJSON(URL,query,getFooter)
 }
 
 function getComicData(){
@@ -31,24 +32,14 @@ function getComicData(){
     name: `${charName}`
       }
 $.getJSON(URL, query, comicsIndex)
-
 }
 
-function sendLetterToAPI(){
-    const getAlphabet =
-    ["A","B","C","D","E","F"
-    ,"G","H","I","K","L","M",
-    "N","O","P","Q","R","S",
-    "T","V","X","Y","Z"]
 
-
-
-}
 
 //Map index for the characacter results information
-
 function characterIndex(data) {
   let response = data.data ;
+
   //clear old data and then do this
   $('#letter-result').html('');
    response.results.map((item, index) => showHero(item));
@@ -58,34 +49,34 @@ function characterIndex(data) {
 //Map index for the characacter comics results information
 function comicsIndex(data){
   let response = data.data
-  // console.log(response)
   response.results.map((item, index) => showBio(item));
-
 }
 
 
 function showHero(item) {
- let firstLetter = item.name[0]
 
-    //  remove thumbnails with no image
-    // if(item.thumbnail.path.includes("image_not_available")){
-    //   $(this).hide();
-    // }else{
-
-  $(`#letter-result`).append(`
+     //remove thumbnails with no image
+    if(! item.thumbnail.path.includes("image_not_available")){
+      $(`#letter-result`).append(`
       <div class="col-5">
-  <img src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait" tabindex="0">
-    <p class="hero-name">${item.name}</p>
-    </div>
-  </div>
-  `)
+      <img src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait" tabindex="0" class="hero-viewed">
+        <p class="hero-name">${item.name}</p>
+        </div>
+      </div>
+      `)
  }
+}
 
+function loader(){
+  $('#letter-result').append(`<div class="loader"></div>`)
+}
 
 function letterSection(){
-
-  $('.navLetter').on('click', function(){
+  //add event delegation
+  $('body').on('click', '.navLetter',function(){
     getLetterResults = $(this).text();
+    //add loader gif while images load
+    loader();
     getDataFromApi();
        });
 }
@@ -96,9 +87,10 @@ function registerClickedName(){
  $('.hero-name').on('click',function()
  {
    charName = $(this).text();
-   console.log(charName)
+  //  console.log(charName)
    getComicData();
    isLightBoxPresent();
+   matchStoredCharacter();
   }
  )
 }
@@ -114,25 +106,71 @@ function isLightBoxPresent(){
 
 //When character name clicked, a lightbox with more info shows
 function showBio(item){
+  //  codeName = indexMatch.name
+  //  intelligence = indexMatch.powerstats.intelligence
+  //  strength = indexMatch.powerstats.strength
+  //  speed = indexMatch.powerstats.speed
+  //  durability = indexMatch.powerstats.durability
+  //  power = indexMatch.powerstats.power
+  //  combat = indexMatch.powerstats.combat
+  //  gender = indexMatch.appearance.gender
+  //  height = indexMatch.appearance.height[0]
+  //  weight = indexMatch.appearance.weight[0]
+  //  realName = indexMatch.biography.fullName
+  //  alterEgo = indexMatch.biography.alterEgos
+  //  alias = indexMatch.biography.aliases[0]
+  //  alignment = indexMatch.biography.alignment
+  //  affiliation = indexMatch.connexts.groupAffiliation
 
 let description = item.description
-let issues = item.comics.items.map((item,index) => (item))
-console.log(issues.item)
+let issues = item.comics.items
+
+
    $('#lightbox').html(
      `<div id="lb-container">
-  <h1>${item.name}</h1>
-  <img class="img-thumb" src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait">
-  <p class"describe">${item.description}</p>
-  <section class="appearances">
-  <h3>Character Appearances</h3>
-    <ul>
-    </ul>
-  </section>
+    <div class="header-box row">
+      <div class="logo-box col-1">
+        <img src="https://bit.ly/2P2EBV5" id="Shield-logo">
+      </div>
+      <div class="col-25">
+        <h1 class="pg-header">S.H.I.E.L.D. Intelligence</h1>
+      </div>
+    </div>
+    <section id="char-container">
+      <h1 class="code-name">${item.name}</h1>
+      <div class="row">
+      <div class="col-4">
+        <img class="img-thumb" src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait"></div>
+      </div>
+      <p class "describe">${item.description}</p>
+      <h3>Comic Appearances</h3>
+      <ul id ="issues"></ul>
+    </section>
+
   </div>`
    ).show()
-  //  console.log(item.comics.items)
+
+   for (let i = 0; i < 5; i++){
+  let issueName = item.comics.items[i].name;
+  if(issueName > 0){
+  $('#issues').append(`<li>${issueName}</li>`)
+}else{
+  $('#issues').append(`<p>No Issue Data Available</p>`)
+}}
+
 
 }
+// <h3>Power Ratings</h3>
+//           <div class="power-rating">
+//             <ul>
+//               <li>Intelligence:${intelligence} </li>
+//               <li>Strength:${strength} </li>
+//               <li>Speed:${speed} </li>
+//               <li>Durability: ${durability}</li>
+//               <li>Power:${power} </li>
+//               <li>Combat:${combat} </li>
+//             </ul>
+//           </div>
 
 //close lightbox
 function goBack(){
@@ -156,11 +194,9 @@ function randomChar(){
 }
 
 function onPageLoad(){
-  // sendLetterToAPI()
   getDataFromApi();
-  letterSection()
-  // createSections()
-  goBack();
+  letterSection();
+
   }
 
 $(onPageLoad);
@@ -171,7 +207,7 @@ $(onPageLoad);
 //   characterIndex(data)
 //   pageNav(data)
 //   // pagination()
-//   getFooter(data)
+//
 // }
 
 // function goBack(){
