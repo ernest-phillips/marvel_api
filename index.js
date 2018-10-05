@@ -58,9 +58,9 @@ function showHero(item) {
      //remove thumbnails with no image
     if(! item.thumbnail.path.includes("image_not_available")){
       $(`#letter-result`).append(`
-      <div class="col-5">
-      <img src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait" tabindex="0" class="hero-viewed">
-        <p class="hero-name">${item.name}</p>
+      <div class="col-5 js-heroContainer">
+      <img src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait" tabindex="0" class="hero-viewed" name="${item.name}">
+        <p class="hero-name" name="${item.name}">${item.name}</p>
         </div>
       </div>
       `)
@@ -84,10 +84,12 @@ function letterSection(){
 
 //Store the clicked character name in charName variable
 function registerClickedName(){
- $('.hero-name').on('click',function()
+ $('.col-5').on('click','img[name], .hero-name',function()
  {
-   charName = $(this).text();
-  //  console.log(charName)
+  //  charName = $(this).text();
+   charName = $(this).attr('name')
+   console.log(charName)
+
    getComicData();
    isLightBoxPresent();
    matchStoredCharacter();
@@ -106,76 +108,50 @@ function isLightBoxPresent(){
 
 //When character name clicked, a lightbox with more info shows
 function showBio(item){
-  //  codeName = indexMatch.name
-  //  intelligence = indexMatch.powerstats.intelligence
-  //  strength = indexMatch.powerstats.strength
-  //  speed = indexMatch.powerstats.speed
-  //  durability = indexMatch.powerstats.durability
-  //  power = indexMatch.powerstats.power
-  //  combat = indexMatch.powerstats.combat
-  //  gender = indexMatch.appearance.gender
-  //  height = indexMatch.appearance.height[0]
-  //  weight = indexMatch.appearance.weight[0]
-  //  realName = indexMatch.biography.fullName
-  //  alterEgo = indexMatch.biography.alterEgos
-  //  alias = indexMatch.biography.aliases[0]
-  //  alignment = indexMatch.biography.alignment
-  //  affiliation = indexMatch.connexts.groupAffiliation
-
 let description = item.description
 let issues = item.comics.items
-
+if(item.description.length < 1){
+  description = "This character does not currently have any biographical data."
+}
 
    $('#lightbox').html(
-     `<div id="lb-container">
-    <div class="header-box row">
-      <div class="logo-box col-1">
-        <img src="https://bit.ly/2P2EBV5" id="Shield-logo">
-      </div>
-      <div class="col-25">
-        <h1 class="pg-header">S.H.I.E.L.D. Intelligence</h1>
-      </div>
+     `
+<div id="lb-container">
+    <div class="header-box">
+      <img class="logo"src="https://seeklogo.com/images/S/s-h-i-e-l-d-logo-F89847BD30-seeklogo.com.png"><h1 class="pg-header">S.H.I.E.L.D. <span class="lb-head-text">Intelligence File</span></h1>
     </div>
-    <section id="char-container">
-      <h1 class="code-name">${item.name}</h1>
-      <div class="row">
-      <div class="col-4">
-        <img class="img-thumb" src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait"></div>
+    <section id="char-container" class="row">
+    <h1 class="code-name">${item.name}</h1>
+      <div class="lb-photo">
+        <img class="img-thumb " src="${item.thumbnail.path}/portrait_uncanny.${item.thumbnail.extension}" alt="${item.name} portrait"></div>
+        <div class="description">
+        <h2 class="bio">Bio:</h2>
+        <p>${description}</p>
+        <h2>Comic Appearances</h2>
+        <section id="issues"></section>
+       </div>
+<a href="#" class="js-exit-lb" ><img src="https://cdn4.iconfinder.com/data/icons/hodgepodge-free/32/logout_account_exit_door-512.png" class="exit"></a>
       </div>
-      <p class "describe">${item.description}</p>
-      <h3>Comic Appearances</h3>
-      <ul id ="issues"></ul>
-    </section>
 
-  </div>`
-   ).show()
+      `  ).show()
 
    for (let i = 0; i < 5; i++){
-  let issueName = item.comics.items[i].name;
-  if(issueName > 0){
-  $('#issues').append(`<li>${issueName}</li>`)
-}else{
-  $('#issues').append(`<p>No Issue Data Available</p>`)
-}}
+      let issueName = item.comics.items[i].name;
+      // if(issueName > 0){
 
+   if(issues.length < 1){
+      $('#issues').html(`<p>No Issue Data Available</p>`)
+    } else {
+      $('#issues').append(`<p class="issue-name">${issueName}</p>`)
+    }
+   }
 
 }
-// <h3>Power Ratings</h3>
-//           <div class="power-rating">
-//             <ul>
-//               <li>Intelligence:${intelligence} </li>
-//               <li>Strength:${strength} </li>
-//               <li>Speed:${speed} </li>
-//               <li>Durability: ${durability}</li>
-//               <li>Power:${power} </li>
-//               <li>Combat:${combat} </li>
-//             </ul>
-//           </div>
 
 //close lightbox
-function goBack(){
+function closeLightBox(){
   //Click anywhere on the page to get rid of lightbox window
-	$('#lightbox').on('click', function() {
+	$('body').on('click',".js-exit-lb", function() {
 		$('#lightbox').hide();
 	});
 }
@@ -196,7 +172,7 @@ function randomChar(){
 function onPageLoad(){
   getDataFromApi();
   letterSection();
-
+  closeLightBox()
   }
 
 $(onPageLoad);
