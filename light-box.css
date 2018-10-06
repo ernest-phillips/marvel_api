@@ -4,24 +4,21 @@
     left:0;
     width:100%;
     height: 100%;
-    overflow-y: visible;
     background: rgba(0,0,0,.9);;
     text-align:center;
-
+    overflow: auto;
 }
 
 
 
 #lb-container{
-
   background-color:#ECECEC;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 100px;
   padding: 0px;
-  min-height: 600px;
-  overflow: hidden;
+  max-height: 900px;
 }
 
 .logo{
@@ -53,18 +50,17 @@
 
 .lb-photo{
   width:50%;
-
-
 }
+
 .bio{
-  margin: 5px;
+  margin: 0px;
 }
 #char-container{
   height: 500px;
   padding:10px;
-  margin-bottom: 20px;
-
+  margin-bottom: 5px;
 }
+
 .description{
   color: #000;
   float: left;
@@ -101,10 +97,17 @@ p{
 }
 
 .exit{
-  width: 25px;
-  margin:0 auto;
+  width:100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
   clear: both;
-
+  height: 40px;
+}
+.exit-img{
+  width:20%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
 }
 @media only screen and (max-width: 450px) {
   .pg-header{
@@ -116,14 +119,15 @@ p{
   letter-spacing: 3px;
   height: 60px;
   padding: 10px;
+  font-size: 30px;
+}
+.code-name{
+  font-size: 20px;
 }
 .lb-head-text{
   visibility: hidden;
 }
-#char-container{
-  padding-left: 0px;
-  padding-right: 0px;
-}
+
 }
 /*Loader to denote that information is coming soon*/
 .loader {
