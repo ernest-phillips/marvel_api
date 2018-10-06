@@ -12,23 +12,23 @@ let counter = 0;
 
 
 
-function getDataFromApi() {  
-  const query = {    
+function getDataFromApi() {
+  const query = {
     limit: 50,
     apikey: KEY,
     orderBy: 'name',
     offset: `${offset}`,
-    nameStartsWith: `${getLetterResults}`  
-    }    
+    nameStartsWith: `${getLetterResults}`
+    }
 $.getJSON(URL, query, characterIndex)
 $.getJSON(URL,query,getFooter)
 }
 
-function getComicData(){  
-  const query = {    
+function getComicData(){
+  const query = {
     limit: 3,
     apikey: KEY,
-    orderBy: 'name',     
+    orderBy: 'name',
     name: `${charName}`
       }
 $.getJSON(URL, query, comicsIndex)
@@ -37,29 +37,29 @@ $.getJSON(URL, query, comicsIndex)
 
 
 //Map index for the characacter results information
-function characterIndex(data) {    
+function characterIndex(data) {
   let response = data.data ;
-  
+
   //clear old data and then do this
   $('#letter-result').html('');
-   response.results.map((item, index) => showHero(item)); 
-   registerClickedName() 
+   response.results.map((item, index) => showHero(item));
+   registerClickedName()
    getComicData()
 }
 
 //Map index for the characacter comics results information
-function comicsIndex(data){  
-  let response = data.data  
-  response.results.map((item, index) => showBio(item));   
+function comicsIndex(data){
+  let response = data.data
+  response.results.map((item, index) => showBio(item));
 }
 
 
-function showHero(item) { 
+function showHero(item) {
 
      //remove thumbnails with no image
-    if(! item.thumbnail.path.includes("image_not_available")){   
-      $(`#letter-result`).append(`  
-      <div class="col-5 js-heroContainer">       
+    if(! item.thumbnail.path.includes("image_not_available")){
+      $(`#letter-result`).append(`
+      <div class="col-5 js-heroContainer">
       <img src="${item.thumbnail.path}/standard_fantastic.${item.thumbnail.extension}" alt="${item.name} portrait" tabindex="0" class="hero-viewed" name="${item.name}">
         <p class="hero-name" name="${item.name}">${item.name}</p>
         </div>
@@ -72,46 +72,50 @@ function loader(){
   $('#letter-result').append(`<div class="loader"></div>`)
 }
 
-function letterSection(){ 
+function letterSection(){
   //add event delegation
-  $('body').on('click', '.navLetter',function(){    
-    getLetterResults = $(this).text();    
-    //add loader gif while images load 
+  $('body').on('click', '.navLetter',function(){
+    getLetterResults = $(this).text();
+    //add loader gif while images load
     loader();
-    getDataFromApi();   
+    getDataFromApi();
        });
 }
 
 
 //Store the clicked character name in charName variable
-function registerClickedName(){  
+function registerClickedName(){
  $('.col-5').on('click','img[name], .hero-name',function()
- {   
+ {
+  //  charName = $(this).text();
+   charName = $(this).attr('name')
+   console.log(charName)
 
-   charName = $(this).attr('name') 
-   getComicData();   
+   getComicData();
    isLightBoxPresent();
-   
+   matchStoredCharacter();
   }
  )
 }
 
 //check to see if lightbox is present
 function isLightBoxPresent(){
-  if ($('#lightbox').length > 0) {   
-      $('lightbox').show() 
+  if ($('#lightbox').length > 0) {
+      $('lightbox').show()
       } else{
-        $('body').append()        
+        $('body').append()
       }
- }  
+ }
 
 //When character name clicked, a lightbox with more info shows
 function showBio(item){
-let description = item.description
-let issues = item.comics.items
-if(item.description.length < 1){
-  description = "This character does not currently have any biographical data."
-}
+  let description = item.description
+  let issues = item.comics.items
+  console.log("Test")
+
+  if(item.description.length < 1){
+    description = "This character does not currently have any biographical data."
+  }
 
    $('#lightbox').html(
      `
@@ -130,43 +134,44 @@ if(item.description.length < 1){
       <h2>Comic Appearances</h2>
       <section id="issues"></section>
       </div>
-  </section>    
-    
+  </section>
+
       <a href="#" class="js-exit-lb" class="exit">
   <img src="https://bit.ly/2DXX3x8" class="exit-img" alt="exit lightbox button">
 </a>
-   
+
 </div>
-      
-      `  ).show() 
- 
-   for (let i = 0; i < 5; i++){  
+
+      `  ).show()
+
+   for (let i = 0; i < 5; i++){
       let issueName = item.comics.items[i].name;
-      // if(issueName > 0){
-      
+
+
    if(issues.length < 1){
-      $('#issues').html(`<p>No Issue Data Available</p>`)      
+     console.log("Not here")
+      $('#issues').html(`<p>No Issue Data Available</p>`)
     } else {
       $('#issues').append(`<p class="issue-name">${issueName}</p>`)
     }
    }
-    
+
 }
 
 //close lightbox
 function closeLightBox(){
   //Click anywhere on the page to get rid of lightbox window
-	$('body').on('click',".js-exit-lb", function() { 
+	$('body').on('click',".js-exit-lb", function() {
 		$('#lightbox').hide();
-	});  
+	});
 }
-  
+
 
 //add footer to DOM
 function getFooter(data){
   let copy = data.copyright;
   let attrTxt = data.attributionText
-  let attrHTML = data.attributionHTML 
+  let attrHTML = data.attributionHTML
   $('.js-footer').html(`${attrHTML}`)
 }
 
@@ -174,12 +179,10 @@ function randomChar(){
 
 }
 
-function onPageLoad(){ 
-  getDataFromApi(); 
-  letterSection(); 
+function onPageLoad(){
+  getDataFromApi();
+  letterSection();
   closeLightBox()
   }
 
 $(onPageLoad);
-
-
