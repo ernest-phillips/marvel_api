@@ -2,7 +2,7 @@ html,body{
   height: 100%;
   }
 body {
-  width: 100%;
+  width: 100%; 
   background-color: #000;
   margin: 0;
   font-family: 'Lato', sans-serif;
@@ -48,32 +48,32 @@ main{
 .navLetter{
   padding: 0px;
 }
-ul{
- padding: 0px;
+ul{ 
+ padding: 0px;    
     display: inline-block;
     margin: 0px;
-
+ 
 }
 li{
   font-family: 'Archivo Black', sans-serif;
 }
 nav{
   color:#000;
-  width: 75%;
+  width: 75%;  
   font-size: 20px;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
+  text-align: center;  
 }
 
 nav li{
-  display: inline-block;
+  display: inline-block;  
   padding-left: 2px;
   padding-right: 2px;
 }
 .container{
   width: 100%;
-  margin-top: 20px;
+  margin-top: 20px;  
 }
 a h3{
   margin: 5px;
@@ -115,12 +115,12 @@ button{
   margin-right: auto;
   border: 5px solid #000;
   border-radius: 10px 10px 0px 0px;
-
+  
 }
 .hero-bio{
   background-color: 00CFFF;
   color: #fff;
-
+  
 }
 .hero-name{
   margin-top: 0;
@@ -130,8 +130,9 @@ button{
   border-radius: 0px 0px 10px 10px;
   height: 60px;
   width: 100%;
+  
   font-weight: bold;
-
+  /* line-height: 50px; */
 }
 
 .hidden{
@@ -153,10 +154,10 @@ button{
   max-width: 960px;
   padding-left: 20px;
   padding-right: 20px;
-
+  
   /* margin: 0 auto; */
   font-size: 15px;
-  text-align: center;
+  text-align: center;   
 }
 
 
@@ -169,12 +170,12 @@ footer{
    height:100px;
    width:100%;
    color: #fff;
-   background:#e23636;
-   text-align: center;
-   margin: 0 auto;
+   background:#e23636;    
+   text-align: center; 
+   margin: 0 auto;  
    padding: 30px 10px 0px 10px;
    font-size: 20px;
-
+   
 }
 a:link {
     text-decoration: none;
@@ -207,8 +208,8 @@ a:active {
     text-decoration: underline;
 }
 .col-5{
-    width: 25%;
-    text-align: center;
+    width: 25%;  
+    text-align: center;  
     margin-top: 10px;
     margin-bottom:  10px;
   }
@@ -218,12 +219,12 @@ a:active {
     }
 
    .col-5{
-    width: 25%;
-    text-align: center;
+    width: 25%;  
+    text-align: center;  
     margin-top: 10px;
     margin-bottom:  10px;
   }
-
+  /* .hero-name{font-size: 16px}  */
 }
 
 @media only screen and (max-width: 450px) {
@@ -234,11 +235,11 @@ a:active {
   }
 }
 @media only screen and (max-width: 650px) {
-
+  
   .col-5{
     width: 50%;
     font-size: 16px;
-    text-align: center;
+    text-align: center;    
   }
   .hero-name{font-size: 16px}
 }
@@ -249,14 +250,16 @@ a:active {
 .row::before, .row::after {
   display: table;
   content: '';
-}
+} 
 #letter-result::after {
   content: "";
   display: table;
   clear: both;
 }
 
-
+/* .row::after {
+  clear: both;
+} */
 
 .banner{
   width: 100%;
@@ -275,10 +278,11 @@ a:active {
  margin-right: auto;
  margin-bottom: 20px;
  font-size: 30px;  
-  padding: 10px;
+ padding: 10px;
   font-weight: bold;
 }
 
 .enter-container{
   width: 100%;
+  display: flex;
 }
